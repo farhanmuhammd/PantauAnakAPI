@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     username: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true, select: false },
-    role: { type: String, enum: ['parent', 'teacher', 'admin'], default: 'parent' },
+    role: { type: String, enum: ['user', 'admin', 'teacher'], default: 'user' },
     refreshToken: { type: String, select: false },
   },
   { timestamps: true }
@@ -24,10 +24,18 @@ userSchema.methods.comparePassword = function (candidate) {
 
 userSchema.pre('findOneAndDelete', async function (next) {
   const user = await this.model.findOne(this.getFilter());
-  if (user) {
-    const Profile = (await import('./profile.model.js')).default;
-    await Profile.findOneAndDelete({ userId: user._id });
-  }
+  if (!user) return next();
+
+  const [{ default: TeacherProfile }, { default: ParentProfile }] = await Promise.all([
+    import('./teacher_profile.model.js'),
+    import('./parent_profile.model.js'),
+  ]);
+
+  await Promise.all([
+    TeacherProfile.findOneAndDelete({ userId: user._id }),
+    ParentProfile.findOneAndDelete({ userId: user._id }),
+  ]);
+
   next();
 });
 
