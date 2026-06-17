@@ -37,6 +37,14 @@ export const verifyBarcode = async (req, res, next) => {
         next(err);
     }
 };
+export const getTrackingById = async (req, res, next) => {
+    try {
+        const tracking = await trackingService.getTrackingById(req.params.trackId);
+        sendSuccess(res, { tracking });
+    } catch (err) {
+        next(err);
+    }
+};
 
 export const startTracking = async (req, res, next) => {
     try {

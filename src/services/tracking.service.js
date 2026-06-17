@@ -1,5 +1,4 @@
 import Tracking from '../models/tracking.model.js';
-import Profile from '../models/profile.model.js';
 import { NotFoundError, AppError } from '../utils/errors.js';
 import { getPagination, buildPaginatedResponse } from '../utils/pagination.js';
 import ParentProfile from '../models/parent_profile.model.js';
@@ -47,6 +46,15 @@ export const generateDailyTracking = async () => {
         generated: toInsert.length,
         skipped: parentProfiles.length - toInsert.length,
     };
+};
+
+export const getTrackingById = async (trackId) => {
+    const tracking = await Tracking.findById(trackId)
+        .populate('classId', 'name')
+        .populate('parentProfileId', 'children parents');
+
+    if (!tracking) throw new NotFoundError('tracking not found');
+    return tracking;
 };
 
 export const verifyBarcode = async (parentProfileId) => {
