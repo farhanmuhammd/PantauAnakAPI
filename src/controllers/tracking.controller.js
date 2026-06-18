@@ -76,7 +76,6 @@ export const deleteTracking = async (req, res, next) => {
 export const getTrackingHistory = async (req, res, next) => {
     try {
         const { data, pagination } = await trackingService.getTrackingHistory(
-            req.params.parentProfileId,
             req.query
         );
         sendSuccess(res, { history: data }, 200, pagination);

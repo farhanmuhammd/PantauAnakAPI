@@ -11,6 +11,7 @@ router.use(authenticate);
 
 // pickup setting — admin & guru
 router.get('/tracking/today', trackingController.getTodayTracking);
+router.get('/tracking/history', trackingController.getTrackingHistory);
 router.get('/settings/pickup', trackingController.getPickupSetting);
 router.post('/settings/pickup', validate(pickupTimeSchema), trackingController.setPickupTime);
 
@@ -25,6 +26,5 @@ router.delete('/tracking/:parentProfileId', trackingController.deleteTracking);
 
 // orang tua routes
 router.put('/tracking/:parentProfileId/arrived', trackingController.arrivedHome);
-router.get('/tracking/:parentProfileId/history', trackingController.getTrackingHistory);
 
 export default router;

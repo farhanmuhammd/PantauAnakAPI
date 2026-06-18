@@ -108,11 +108,21 @@ export const deleteTracking = async (parentProfileId) => {
     if (!tracking) throw new NotFoundError('No tracking found for today');
 };
 
-export const getTrackingHistory = async (parentProfileId, query) => {
+export const getTrackingHistory = async (query) => {
     const { page, limit, skip } = getPagination(query);
+
+    const filter = {};
+
+    if (query.classId) {
+        filter.classId = query.classId;
+    } else if (query.parentProfileId) {
+        filter.parentProfileId = query.parentProfileId;
+    }
+
+
     const [history, total] = await Promise.all([
-        Tracking.find({ parentProfileId }).sort({ date: -1 }).skip(skip).limit(limit),
-        Tracking.countDocuments({ parentProfileId }),
+        Tracking.find(filter).populate('parentProfileId', 'children parents').sort({ date: -1 }).skip(skip).limit(limit),
+        Tracking.countDocuments(filter),
     ]);
     return buildPaginatedResponse(history, total, page, limit);
 };
