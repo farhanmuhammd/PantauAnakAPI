@@ -10,6 +10,7 @@ router.use(authenticate);
 
 
 // pickup setting — admin & guru
+router.get('/tracking/today', trackingController.getTodayTracking);
 router.get('/settings/pickup', trackingController.getPickupSetting);
 router.post('/settings/pickup', validate(pickupTimeSchema), trackingController.setPickupTime);
 
@@ -18,7 +19,6 @@ router.post('/tracking/generate', authorize('admin', 'teacher'), trackingControl
 router.get('/tracking/:trackId', trackingController.getTrackingById);
 
 // guru routes
-router.get('/tracking/class/:classId', trackingController.getTodayTrackingByClass);
 router.get('/tracking/verify/:parentProfileId', trackingController.verifyBarcode);
 router.put('/tracking/:parentProfileId/start', trackingController.startTracking);
 router.delete('/tracking/:parentProfileId', trackingController.deleteTracking);

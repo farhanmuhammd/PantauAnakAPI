@@ -85,10 +85,9 @@ export const getTrackingHistory = async (req, res, next) => {
     }
 };
 
-export const getTodayTrackingByClass = async (req, res, next) => {
+export const getTodayTracking = async (req, res, next) => {
     try {
-        const { data, pagination } = await trackingService.getTodayTrackingByClass(
-            req.params.classId,
+        const { data, pagination } = await trackingService.getTodayTracking(
             req.query
         );
         sendSuccess(res, { trackings: data }, 200, pagination);

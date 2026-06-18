@@ -117,15 +117,25 @@ export const getTrackingHistory = async (parentProfileId, query) => {
     return buildPaginatedResponse(history, total, page, limit);
 };
 
-export const getTodayTrackingByClass = async (classId, query) => {
+export const getTodayTracking = async (query) => {
     const today = getTodayDate();
     const { page, limit, skip } = getPagination(query);
+
+    const filter = { date: today };
+
+    if (query.classId) {
+        filter.classId = query.classId;
+    } else if (query.parentProfileId) {
+        filter.parentProfileId = query.parentProfileId;
+    }
+
     const [trackings, total] = await Promise.all([
-        Tracking.find({ classId, date: today })
+        Tracking.find(filter)
             .populate('parentProfileId', 'children parents')
             .skip(skip)
             .limit(limit),
-        Tracking.countDocuments({ classId, date: today }),
+        Tracking.countDocuments(filter),
     ]);
+
     return buildPaginatedResponse(trackings, total, page, limit);
 };
