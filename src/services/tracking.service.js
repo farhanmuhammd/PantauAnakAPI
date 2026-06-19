@@ -58,6 +58,7 @@ export const getTrackingById = async (trackId) => {
 };
 
 export const verifyBarcode = async (parentProfileId) => {
+
     const profile = await ParentProfile.findById(parentProfileId)
         .populate('children.classId', 'name')
         .populate('userId', 'email');

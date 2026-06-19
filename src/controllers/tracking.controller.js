@@ -47,6 +47,8 @@ export const getTrackingById = async (req, res, next) => {
 };
 
 export const startTracking = async (req, res, next) => {
+
+    console.log("hit")
     try {
         const tracking = await trackingService.startTracking(req.params.parentProfileId);
         sendSuccess(res, { tracking });
