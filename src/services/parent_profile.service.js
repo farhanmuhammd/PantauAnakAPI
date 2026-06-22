@@ -33,7 +33,7 @@ export const createParentProfile = async ({ children, parents, address }) => {
 };
 
 export const getMyParentProfile = async (userId) => {
-    const profile = await ParentProfile.findOne({ userId }).populate('userId', 'email role');
+    const profile = await ParentProfile.findOne({ userId }).populate('userId', 'email role').populate('children.classId', 'name');
     if (!profile) throw new NotFoundError('Parent profile not found');
     return profile;
 };
@@ -41,14 +41,15 @@ export const getMyParentProfile = async (userId) => {
 export const getAllParentProfiles = async (query) => {
     const { page, limit, skip } = getPagination(query);
     const [profiles, total] = await Promise.all([
-        ParentProfile.find().populate('userId', 'email role').skip(skip).limit(limit),
+        ParentProfile.find().populate('userId', 'email role').populate('children.classId', 'name').skip(skip).limit(limit),
         ParentProfile.countDocuments(),
     ]);
     return buildPaginatedResponse(profiles, total, page, limit);
 };
 
 export const getParentProfileById = async (id) => {
-    const profile = await ParentProfile.findById(id).populate('userId', 'email role');
+    const profile = await ParentProfile.findById(id).populate('userId', 'email role').populate('children.classId', 'name');
+    ;
     if (!profile) throw new NotFoundError('Parent profile not found');
     return profile;
 };
