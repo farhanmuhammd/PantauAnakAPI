@@ -1,12 +1,10 @@
 import TeacherProfile from '../models/teacher_profile.model.js';
 import User from '../models/user.model.js';
-import { generateDefaultCredential } from '../utils/credential.js';
 import { NotFoundError } from '../utils/errors.js';
 import { getPagination, buildPaginatedResponse } from '../utils/pagination.js';
 
 export const createTeacherProfile = async (data) => {
-    const { fullName, ...rest } = data;
-    const { username, email, password } = generateDefaultCredential(fullName);
+    const { fullName, email, password, ...rest } = data;
 
     let user = null;
 
@@ -20,7 +18,7 @@ export const createTeacherProfile = async (data) => {
         });
 
         return {
-            credentials: { username, email, password },
+            credentials: { email, password },
             profile: await profile.populate('userId', 'email role'),
         };
     } catch (err) {
@@ -30,7 +28,7 @@ export const createTeacherProfile = async (data) => {
 };
 
 export const getMyTeacherProfile = async (userId) => {
-    const profile = await TeacherProfile.findOne({ userId }).populate('userId', 'email role');
+    const profile = await TeacherProfile.findOne({ userId }).populate('userId', 'email role').populate('classId', 'name');
     if (!profile) throw new NotFoundError('Teacher profile not found');
     return profile;
 };
@@ -38,14 +36,14 @@ export const getMyTeacherProfile = async (userId) => {
 export const getAllTeacherProfiles = async (query) => {
     const { page, limit, skip } = getPagination(query);
     const [profiles, total] = await Promise.all([
-        TeacherProfile.find().populate('userId', 'email role').skip(skip).limit(limit),
+        TeacherProfile.find().populate('userId', 'email role').populate('classId', 'name').skip(skip).limit(limit),
         TeacherProfile.countDocuments(),
     ]);
     return buildPaginatedResponse(profiles, total, page, limit);
 };
 
 export const getTeacherProfileById = async (id) => {
-    const profile = await TeacherProfile.findById(id).populate('userId', 'email role');
+    const profile = await TeacherProfile.findById(id).populate('userId', 'email role').populate('classId', 'name');
     if (!profile) throw new NotFoundError('Teacher profile not found');
     return profile;
 };
