@@ -103,9 +103,8 @@ export const arrivedHome = async (parentProfileId) => {
     return tracking;
 };
 
-export const deleteTracking = async (parentProfileId) => {
-    const today = getTodayDate();
-    const tracking = await Tracking.findOneAndDelete({ parentProfileId, date: today });
+export const deleteTracking = async (id) => {
+    const tracking = await Tracking.findOneAndDelete({ _id: id });
     if (!tracking) throw new NotFoundError('No tracking found for today');
 };
 

@@ -68,7 +68,7 @@ export const arrivedHome = async (req, res, next) => {
 
 export const deleteTracking = async (req, res, next) => {
     try {
-        await trackingService.deleteTracking(req.params.parentProfileId);
+        await trackingService.deleteTracking(req.params.id);
         sendSuccess(res, null, 204);
     } catch (err) {
         next(err);

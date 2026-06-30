@@ -7,7 +7,6 @@ import { registerSchema } from '../validators/auth.validator.js';
 
 const router = Router();
 
-// router.use(authenticate, authorize('admin'));
 
 router
   .route('/users')

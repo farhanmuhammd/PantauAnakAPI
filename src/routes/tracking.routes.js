@@ -22,7 +22,7 @@ router.get('/tracking/:trackId', trackingController.getTrackingById);
 // guru routes
 router.get('/tracking/verify/:parentProfileId', trackingController.verifyBarcode);
 router.put('/tracking/:parentProfileId/start', trackingController.startTracking);
-router.delete('/tracking/:parentProfileId', trackingController.deleteTracking);
+router.delete('/tracking/:id', trackingController.deleteTracking);
 
 // orang tua routes
 router.put('/tracking/:parentProfileId/arrived', trackingController.arrivedHome);

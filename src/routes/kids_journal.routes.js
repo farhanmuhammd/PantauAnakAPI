@@ -11,7 +11,6 @@ router.use(authenticate);
 
 router.post(
     '/kids-journals',
-    authorize('admin', 'teacher'),
     upload.single('image'),
     validate(createKidsJournalSchema),
     kidsJournalController.createKidsJournal
@@ -19,6 +18,6 @@ router.post(
 
 router.get('/kids-journals', kidsJournalController.getAllKidsJournals);
 router.get('/kids-journals/:id', kidsJournalController.getKidsJournalById);
-router.delete('/kids-journals/:id', authorize('admin', 'teacher'), kidsJournalController.deleteKidsJournal);
+router.delete('/kids-journals/:id', kidsJournalController.deleteKidsJournal);
 
 export default router;
